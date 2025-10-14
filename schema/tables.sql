@@ -1,3 +1,5 @@
+--Cole Testing Edits With Git
+
 /*
 ---------------------------
 -- Create Customers table
