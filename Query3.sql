@@ -4,5 +4,6 @@ CREATE TABLE Customers (
     LastName NVARCHAR(50) NOT NULL,
     Email NVARCHAR(100) UNIQUE NOT NULL,
     Phone NVARCHAR(20) NULL,
-    DriverLicense NVARCHAR(30) NOT NULL
+    DriverLicense NVARCHAR(30) NOT NULL,
+    Cole INT NULL
 );
