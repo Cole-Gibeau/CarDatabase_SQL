@@ -1,9 +1,0 @@
-CREATE TABLE Customers (
-    CustomerID INT PRIMARY KEY IDENTITY(1,1),
-    FirstName NVARCHAR(50) NOT NULL,
-    LastName NVARCHAR(50) NOT NULL,
-    Email NVARCHAR(100) UNIQUE NOT NULL,
-    Phone NVARCHAR(20) NULL,
-    DriverLicense NVARCHAR(30) NOT NULL,
-    Cole INT NULL
-);
