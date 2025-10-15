@@ -1,20 +1,24 @@
--- Last Updated By: Kendrick 10/14/2025
+-- Last Updated By: Cole 10/14/2025 10 pm
 /*
 ---------------------------
 -- Create Customers table
 ---------------------------
 CREATE TABLE Customers
 ( 
-	Customer_ID					int			  NOT NULL,
-	Membership_ID				int			  NOT NULL,
-	Customer_First_Name			Varchar(20)	  NOT NULL,
-	Customer_Last_Name			Varchar(20)	  NOT NULL,
-	Customer_Email				Varchar(50)	  NOT NULL,
-	Customer_Phone_Number		Varchar(20)	  NOT NULL,
-	Customer_Address			Varchar(100)  NOT NULL,
-	Customer_City				Varchar(50)	  NOT NULL,
-	Customer_Zip				Varchar(5)	  NOT NULL,
-	Customer_License_Number		Varchar(20)   NOT NULL,
+	Customer_ID					INT	IDENTITY(1,1) PRIMARY KEY,
+	Membership_ID				INT			      NOT NULL,
+	Customer_First_Name			VARCHAR(20)	      NOT NULL,
+	Customer_Last_Name			VARCHAR(20)	      NOT NULL,
+	Customer_Email				VARCHAR(50)	      NOT NULL,
+	Customer_Phone_Number		VARCHAR(20)	      NOT NULL,
+	Customer_Address			VARCHAR(100)      NOT NULL,
+	Customer_City				VARCHAR(50)	      NOT NULL,
+	Customer_Zip				VARCHAR(5)	      NOT NULL,
+	Customer_License_Number		VARCHAR(20)       NOT NULL,
+
+	CONSTRAINT FK_CUSTOMERS_MEMBERSHIP
+		FOREIGN KEY (Membership_ID)
+		REFERENCES Membership(Membership_ID)
 );
 
 -------------------------
@@ -22,12 +26,12 @@ CREATE TABLE Customers
 -------------------------
 CREATE TABLE Address
 (
-	Address_ID					int			  NULL,
-	Street_Address				Varchar(100)  NULL,
-	City						Varchar(50)	  NULL,
-	Zip							Varchar(5)	  NULL,
-	Customer_ID					int			  NOT NULL,
-	Branch_ID					int			  NOT NULL,
+	Address_ID					INT	IDENTITY(1,1) PRIMARY KEY,
+	Street_Address				VARCHAR(100)      NULL,
+	City						VARCHAR(50)	      NULL,
+	Zip							VARCHAR(5)	      NULL,
+	Customer_ID					INT			      NOT NULL,
+	Branch_ID					INT			      NOT NULL,
 );
 
 -----------------------
@@ -35,12 +39,14 @@ CREATE TABLE Address
 -----------------------
 CREATE TABLE Phone
 (
-	Phone_ID					int			  NULL,
-	Home_Phone					Varchar(20)   NULL,
-	Cell_Phone					Varchar(20)   NULL,
-	Business_Phone				Varchar(20)   NULL,
-	Customer_ID					int			  NOT NULL,
-	Branch_ID					int			  NOT NULL,
+	Phone_ID					INT	IDENTITY(1,1) PRIMARY KEY,
+	Home_Phone					VARCHAR(20)       NULL,
+	Cell_Phone					VARCHAR(20)       NULL,
+	Business_Phone				VARCHAR(20)       NULL,
+	Customer_ID					INT			      NOT NULL,
+	Branch_ID					INT			      NOT NULL,
+
+
 );
 
 ------------------------
@@ -48,14 +54,14 @@ CREATE TABLE Phone
 ------------------------
 CREATE TABLE Branch
 (
-	Branch_ID					int			  NOT NULL,
-	Branch_Name					Varchar(100)  NOT NULL,
-	Branch_Phone_Number			Varchar(20)   NOT NULL,
-	Branch_Hours				Varchar		  NOT NULL,
-	Branch_Address				Varchar(100)  NOT NULL,
-	Branch_City					Varchar(50)   NOT NULL,
-	Branch_Zip_Code				int			  NOT NULL,
-	Branch_State_Abbreviation	Char(2)		  NOT NULL,
+	Branch_ID					INT	IDENTITY(1,1) PRIMARY KEY,
+	Branch_Name					VARCHAR(100)      NOT NULL,
+	Branch_Phone_Number			VARCHAR(20)       NOT NULL,
+	Branch_Hours				VARCHAR		      NOT NULL,
+	Branch_Address				VARCHAR(100)      NOT NULL,
+	Branch_City					VARCHAR(50)       NOT NULL,
+	Branch_Zip_Code				INT			      NOT NULL,
+	Branch_State_Abbreviation	CHAR(2)		      NOT NULL,
 );
 
 -------------------------
@@ -63,16 +69,40 @@ CREATE TABLE Branch
 -------------------------
 CREATE TABLE Booking
 (
-	Booking_ID					int			  NOT NULL,
-	Date_Booked					Date		  NOT NULL,
-	PickUpDate					Date		  NOT NULL,
-	DropOffDate					Date		  NOT NULL,
-	Customer_ID					int			  NOT NULL,
-	PickUp_Branch_ID			int			  NOT NULL,
-	DropOff_Branch_ID			int			  NOT NULL,
-	Payment_ID					int			  NOT NULL,
-	Vehicle_ID					int			  NOT NULL,
-	Insurance_ID				int			  NULL,
+	Booking_ID					INT	IDENTITY(1,1) PRIMARY KEY,
+	Date_Booked					DATE		      NOT NULL,
+	PickUpDate					DATE		      NOT NULL,
+	DropOffDate					DATE		      NOT NULL,
+	Customer_ID					INT			      NOT NULL,
+	PickUp_Branch_ID			INT			      NOT NULL,
+	DropOff_Branch_ID			INT			      NOT NULL,
+	Payment_ID					INT			      NOT NULL,
+	Vehicle_ID					INT			      NOT NULL,
+	Insurance_ID				INT			      NULL,
+
+	CONSTRAINT FK_BOOKING_CUSTOMER
+		FOREIGN KEY (Customer_ID)
+		REFERENCES CUSTOMER(Customer_ID),
+
+	CONSTRAINT FK_BOOKING_PICKUP_BRANCH
+		FOREIGN KEY (PickUp_Branch_ID)
+		REFERENCES Branch(Branch_ID),
+		
+	CONSTRAINT FK_BOOKING_DROPOFF_BRANCH
+		FOREIGN KEY (DropOff_Branch_ID)
+		REFERENCES Branch(Branch_ID),
+
+	CONSTRAINT FK_BOOKING_PAYMENT
+		FOREIGN KEY (Payment_ID)
+		REFERENCES Payment(Payment_ID),
+
+	CONSTRAINT FK_BOOKING_VEHICLE
+		FOREIGN KEY (Vehicle_ID)
+		REFERENCES Vehicle(Vehicle_ID),
+
+	CONSTRAINT FK_BOOKING_INSURANCE
+		FOREIGN KEY (Insurance_ID)
+		REFERENCES Insurance(Insurance_ID)
 );
 
 ---------------------------
@@ -80,9 +110,13 @@ CREATE TABLE Booking
 ---------------------------
 CREATE TABLE Insurance
 (
-	Insurance_ID				int			  NOT NULL,
-	Insurance_Type_ID			int			  NOT NULL,
-	Insurance_Name				Varchar(20)   NOT NULL,
+	Insurance_ID				INT	IDENTITY(1,1) PRIMARY KEY,
+	Insurance_Type_ID			INT			      NOT NULL,
+	Insurance_Name				VARCHAR(20)       NOT NULL,
+
+	CONSTRAINT FK_INSURANCE_INSURANCE_TYPE
+		FOREIGN KEY (Insurance_Type_ID)
+		REFERENCES Insurance_Type(Insurance_Type_ID)
 );
 
 --------------------------------
@@ -90,9 +124,9 @@ CREATE TABLE Insurance
 --------------------------------
 CREATE TABLE Insurance_Type
 (
-	Insurance_Type_ID			int			  NOT NULL,
-	Insurance_Type_Name			Varchar(100)  NOT NULL,
-	Insurance_Type_Description	Varchar(200)  NOT NULL,
+	Insurance_Type_ID			INT	IDENTITY(1,1) PRIMARY KEY,
+	Insurance_Type_Name			VARCHAR(100)      NOT NULL,
+	Insurance_Type_Description	VARCHAR(200)      NOT NULL,
 );
 
 -------------------------
@@ -100,15 +134,23 @@ CREATE TABLE Insurance_Type
 -------------------------
 CREATE TABLE Vehicle
 (
-	Vehicle_ID					int			  NOT NULL,
-	Rental_Rate_ID				int			  NOT NULL,
-	Vehicle_Model				Varchar(50)   NOT NULL,
-	Vehicle_Size				Varchar(20)   NOT NULL,
-	Vehicle_Mileage				Varchar(20)   NOT NULL,
-	Vehicle_Make				Varchar(50)   NOT NULL,
-	Vehicle_Year				Year		  NOT NULL,
-	Vehicle_VIN					int			  NOT NULL,
-	Color_ID					int			  NOT NULL,
+	Vehicle_ID					INT	IDENTITY(1,1) PRIMARY KEY,
+	Rental_Rate_ID				int			      NOT NULL,
+	Vehicle_Model				VARCHAR(50)       NOT NULL,
+	Vehicle_Size				VARCHAR(20)       NOT NULL,
+	Vehicle_Mileage				VARCHAR(20)       NOT NULL,
+	Vehicle_Make				VARCHAR(50)       NOT NULL,
+	Vehicle_Year				INT		          NOT NULL,
+	Vehicle_VIN					INT			      NOT NULL,
+	Color_ID					INT			      NOT NULL,
+
+	CONSTRAINT FK_VEHICLE_RENTAL_RATE
+		FOREIGN KEY (Rental_Rate_ID)
+		REFERENCES Rental_Rate(Rental_Rate_ID),
+
+	CONSTRAINT FK_VEHICLE_COLOR
+		FOREIGN KEY(Color_ID)
+		REFERENCES Color(Color_ID)
 );
 
 -----------------------
@@ -116,8 +158,8 @@ CREATE TABLE Vehicle
 -----------------------
 CREATE TABLE Color
 (
-	Color_ID					int			  NOT NULL,
-	Color_Description			Varchar(20)   NOT NULL,
+	Color_ID					INT	IDENTITY(1,1) PRIMARY KEY,
+	Color_Description			VARCHAR(20)       NOT NULL,
 );
 
 -------------------------
@@ -125,11 +167,17 @@ CREATE TABLE Color
 -------------------------
 CREATE TABLE Payment
 (
-	Payment_ID					int			  NOT NULL,
-	Payment_Type_ID				int			  NOT NULL,
-	Discount_ID					int			  NULL,
-	Payment_Amount				Decimal(10,2) NOT NULL,
-	Payment_Date				Date		  NOT NULL,
+	Payment_ID					INT	IDENTITY(1,1) PRIMARY KEY,
+	Payment_Type_ID				INT			      NOT NULL,
+	Discount_ID					INT			      NULL,
+	Payment_Amount				DECIMAL(10,2)     NOT NULL,
+	Payment_Date				DATE		      NOT NULL,
+
+	CONSTRAINT FK_PAYMENT_PAYMENT_TYPE
+		FOREIGN KEY (Payment_Type_ID)
+		REFERENCES Payment_Type(Payment_Type_ID)
+
+
 );
 
 ------------------------------
@@ -137,8 +185,8 @@ CREATE TABLE Payment
 ------------------------------
 CREATE TABLE Payment_Type
 (
-	Payment_Type_ID				int			  NOT NULL,
-	Payment_Type_Name			Varchar		  NOT NULL,
+	Payment_Type_ID				INT	IDENTITY(1,1) PRIMARY KEY,
+	Payment_Type_Name			VARCHAR		      NOT NULL
 );
 
 ------------------------------
@@ -146,9 +194,9 @@ CREATE TABLE Payment_Type
 ------------------------------
 CREATE TABLE Discount
 (
-	Discount_ID					int			  NOT NULL,
-	Discount_Name				Varchar		  NOT NULL,
-	Discount_Percentage			Decimal		  NOT NULL,
+	Discount_ID					INT	IDENTITY(1,1) PRIMARY KEY,
+	Discount_Name				VARCHAR	    	  NOT NULL,
+	Discount_Percentage			DECIMAL(10,2)  	  NOT NULL
 );
 
 -----------------------------
@@ -156,8 +204,8 @@ CREATE TABLE Discount
 -----------------------------
 CREATE TABLE Rental_Rate
 (
-	Rental_Rate_ID				int			  NOT NULL,
-	Rental_Rate_Price			Varchar(20)   NOT NULL,
+	Rental_Rate_ID				INT	IDENTITY(1,1) PRIMARY KEY,
+	Rental_Rate_Price			VARCHAR(20)       NOT NULL,
 );
 
 ----------------------------
@@ -165,10 +213,18 @@ CREATE TABLE Rental_Rate
 ----------------------------
 CREATE TABLE Inspection
 (
-	Inspection_ID				int			  NOT NULL,
-	Booking_ID					int			  NOT NULL,
-	Inspection_Type_ID			int			  NOT NULL,
-	Inspection_Results			Varchar(100)  NOT NULL,
+	Inspection_ID				INT	IDENTITY(1,1) PRIMARY KEY,
+	Booking_ID					INT			      NOT NULL,
+	Inspection_Type_ID			INT			      NOT NULL,
+	Inspection_Results			VARCHAR(100)      NOT NULL,
+
+	CONSTRAINT FK_INSPECTION_BOOKING
+		FOREIGN KEY (Booking_ID)
+		REFERENCES Booking(Booking_ID),
+
+	CONSTRAINT FK_INSPECTION_INSPECTION_TYPE
+		FOREIGN KEY (Inspection_Type_ID)
+		REFERENCES Inspection_Type(Inspection_Type_ID)
 );
 
 ---------------------------------
@@ -176,9 +232,9 @@ CREATE TABLE Inspection
 ---------------------------------
 CREATE TABLE Inspection_Type
 (
-	Inspection_Type_ID			int			  NOT NULL,
-	Inspection_Type_Name		Varchar(20)	  NOT NULL,
-	Inspection_Type_Description Varchar(50)   NOT NULL,
+	Inspection_Type_ID			INT	IDENTITY(1,1) PRIMARY KEY,
+	Inspection_Type_Name		VARCHAR(20)	      NOT NULL,
+	Inspection_Type_Description VARCHAR(50)       NOT NULL,
 );
 
 -------------------------------
@@ -186,8 +242,8 @@ CREATE TABLE Inspection_Type
 -------------------------------
 CREATE TABLE Damage_Report
 (
-	Damage_Report_ID			int			  NOT NULL,
-	Damage_Report_Description   Varchar(250)  NOT NULL,
+	Damage_Report_ID			INT	IDENTITY(1,1) PRIMARY KEY,
+	Damage_Report_Description   VARCHAR(250)      NOT NULL,
 );
 
 ----------------------------
@@ -195,11 +251,15 @@ CREATE TABLE Damage_Report
 ----------------------------
 CREATE TABLE Membership
 (
-	Membership_ID				int			  NOT NULL,
-	Membership_Type_ID			int			  NOT NULL,
-	Member_Renewal_Date			Date	      NOT NULL,
-	Member_Points				int			  NULL,
-	Member_Status				Varchar		  NOT NULL,
+	Membership_ID				INT	IDENTITY(1,1) PRIMARY KEY,
+	Membership_Type_ID			INT 			  NOT NULL,
+	Member_Renewal_Date			DATE	          NOT NULL,
+	Member_Points				INT			      NULL,
+	Member_Status				VARCHAR		      NOT NULL,
+
+	CONSTRAINT FK_Membership_MemberShip_type
+		FOREIGN KEY (Membership_Type_ID)
+		REFERENCES Membership_Type(Membership_Type_ID)
 );
 
 ---------------------------------
@@ -207,10 +267,10 @@ CREATE TABLE Membership
 ---------------------------------
 CREATE TABLE Membership_Type
 (
-	Membership_Type_ID			int			  NOT NULL,
-	Membership_Type_Name		Varchar(20)   NOT NULL,
-	Membership_Type_Price		int			  NOT NULL,
-	Membership_Type_Description Varchar		  NOT NULL,
+	Membership_Type_ID			INT	IDENTITY(1,1) PRIMARY KEY,
+	Membership_Type_Name		VARCHAR(20)       NOT NULL,
+	Membership_Type_Price		INT			      NOT NULL,
+	Membership_Type_Description VARCHAR		      NOT NULL,
 );
 
 */
