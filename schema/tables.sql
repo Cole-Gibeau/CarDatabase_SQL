@@ -1,17 +1,6 @@
 /*
 -- Last Updated By: Srijan 10/22/2025 10:55am
-------------------------------------------------------------
--- DROP & CREATE DATABASE
-------------------------------------------------------------
-IF DB_ID('CarRentalDB') IS NOT NULL
-    DROP DATABASE CarRentalDB;
-GO
 
-CREATE DATABASE CarRentalDB;
-GO
-
-USE CarRentalDB;
-GO
 
 ------------------------------------------------------------
 -- STEP 1: CREATE TABLES (NO FOREIGN KEYS)
