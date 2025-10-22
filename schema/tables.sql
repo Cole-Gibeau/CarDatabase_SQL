@@ -6,6 +6,16 @@
 -- STEP 1: CREATE TABLES (NO FOREIGN KEYS)
 ------------------------------------------------------------
 
+IF DB_ID('CarRentalDB') IS NOT NULL
+    DROP DATABASE CarRentalDB;
+GO
+
+CREATE DATABASE CarRentalDB;
+GO
+
+USE CarRentalDB;
+GO
+
 CREATE TABLE Branch (
     Branch_ID INT IDENTITY(1,1) PRIMARY KEY,
     Branch_Name VARCHAR(100) NOT NULL,
