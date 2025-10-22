@@ -1,0 +1,9 @@
+IF DB_ID('CarRentalDB') IS NOT NULL
+    DROP DATABASE CarRentalDB;
+GO
+
+CREATE DATABASE CarRentalDB;
+GO
+
+USE CarRentalDB;
+GO
