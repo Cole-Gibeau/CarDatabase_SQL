@@ -1,4 +1,4 @@
-/*
+
 -- Last Updated By: COLE 10/22/2025 2PM
 
 
@@ -88,10 +88,16 @@ CREATE TABLE Membership (
     Member_Status        VARCHAR(20)       NOT NULL,
 
     CONSTRAINT Check_Member_Points
-        CHECK (Member_Points IS NULL OR Member_Points >= 0) DEFAULT (0),
+        CHECK (Member_Points IS NULL OR Member_Points >= 0),
+
+    CONSTRAINT DF_Member_Points
+        DEFAULT (0) FOR Member_Points,
 
     CONSTRAINT Check_Member_Status
-        CHECK (Member_Status IN ('Active','Inactive')) DEFAULT ('Active')
+        CHECK (Member_Status IN ('Active','Inactive')),
+    
+    CONSTRAINT DF_Member_Status
+        DEFAULT ('Active') FOR Member_Status
 );
 
 CREATE TABLE Vehicle (
@@ -302,4 +308,4 @@ ADD CONSTRAINT FK_Inspection_Type
 FOREIGN KEY (Inspection_Type_ID)
 REFERENCES Inspection_Type(Inspection_Type_ID);
 
-*/
+
