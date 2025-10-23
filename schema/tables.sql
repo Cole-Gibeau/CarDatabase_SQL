@@ -84,20 +84,14 @@ CREATE TABLE Membership (
     Membership_ID        INT IDENTITY(1,1) PRIMARY KEY,
     Membership_Type_ID   INT               NOT NULL,
     Member_Renewal_Date  DATE              NOT NULL,
-    Member_Points        INT               NULL,
-    Member_Status        VARCHAR(20)       NOT NULL,
+    Member_Points        INT               DEFAULT (0),
+    Member_Status        VARCHAR(20)       DEFAULT ('Active'),
 
     CONSTRAINT Check_Member_Points
         CHECK (Member_Points IS NULL OR Member_Points >= 0),
 
-    CONSTRAINT DF_Member_Points
-        DEFAULT (0) FOR Member_Points,
-
     CONSTRAINT Check_Member_Status
-        CHECK (Member_Status IN ('Active','Inactive')),
-    
-    CONSTRAINT DF_Member_Status
-        DEFAULT ('Active') FOR Member_Status
+        CHECK (Member_Status IN ('Active','Inactive'))     
 );
 
 CREATE TABLE Vehicle (
@@ -123,13 +117,10 @@ CREATE TABLE Payment (
     Payment_Type_ID  INT               NOT NULL,
     Discount_ID      INT               NULL,
     Payment_Amount   DECIMAL(10,2)     NOT NULL,
-    Payment_Date     DATE              NOT NULL,
+    Payment_Date     DATE              DEFAULT (CAST(GETDATE() AS date)),
 
     CONSTRAINT Check_Payment_Amount
-        CHECK (Payment_Amount >= 0),
-
-    CONSTRAINT DF_Payment_Date
-        DEFAULT (CAST(GETDATE() AS date))
+        CHECK (Payment_Amount >= 0)
 );
 
 CREATE TABLE Insurance (
