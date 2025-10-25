@@ -104,6 +104,10 @@ CREATE TABLE Vehicle (
     Vehicle_Year      INT               NOT NULL,
     Vehicle_VIN       CHAR(17)          NOT NULL,
     Color_ID          INT               NOT NULL,
+    Vehicle_status    VARCHAR(11)       NOT NULL,
+
+    CONSTRAINT Check_Vehicle_Status
+        CHECK (Vehicle_Status IN ('Available','Unavailable')),
 
     CONSTRAINT Check_Vehicle_Mileage
         CHECK (Vehicle_Mileage >= 0),
