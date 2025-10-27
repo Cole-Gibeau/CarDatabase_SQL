@@ -1,4 +1,4 @@
-/*Update by Srijan on Oct 19, 3:00pm*/
+/*Update by Cole on Oct 27, 7 am*/
 
 USE testing
 GO
@@ -28,11 +28,11 @@ VALUES (49.99), (59.99), (69.99), (79.99), (89.99);
 ---------------------
 INSERT INTO Vehicle (Rental_Rate_ID, Vehicle_Model, Vehicle_Size, Vehicle_Mileage, Vehicle_Make, Vehicle_Year, Vehicle_VIN, Color_ID)
 VALUES
-(1, 'RAV4', 'SUV', 32000, 'Toyota', 2022, '1HGCM82633A123451', 1),
-(2, 'Civic', 'Compact', 18000, 'Honda', 2023, '2FMDK3GC0BBB23456', 2),
-(3, 'Camry', 'Sedan', 25000, 'Toyota', 2021, '3C6UR5DL1DG345678', 3),
-(4, 'CR-V', 'SUV', 40000, 'Honda', 2020, '5FNRL38697B456789', 4),
-(5, 'Altima', 'Sedan', 15000, 'Nissan', 2024, '1HGEM21901L567890', 5);
+(1, 'RAV4', 'SUV', 32000, 'Toyota', 2022, '1HGCM82633A123451', 1,'Unavailable'),
+(2, 'Civic', 'Compact', 18000, 'Honda', 2023, '2FMDK3GC0BBB23456', 2,'Available'),
+(3, 'Camry', 'Sedan', 25000, 'Toyota', 2021, '3C6UR5DL1DG345678', 3,'Unavailable'),
+(4, 'CR-V', 'SUV', 40000, 'Honda', 2020, '5FNRL38697B456789', 4,'Available'),
+(5, 'Altima', 'Sedan', 15000, 'Nissan', 2024, '1HGEM21901L567890', 5,'Available');
 
 ---------------------
 -- 5. Payment_Type
