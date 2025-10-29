@@ -1,9 +1,3 @@
--- ------------------------------------------------------------
---  CAR RENTAL DATABASE (MySQL Version)
---  Converted from SQL Server by ChatGPT
--- ------------------------------------------------------------
-
--- STEP 1: Drop and Create Database
 DROP DATABASE IF EXISTS CarRentalDB;
 CREATE DATABASE CarRentalDB;
 USE CarRentalDB;
