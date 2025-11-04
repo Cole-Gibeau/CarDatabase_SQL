@@ -105,6 +105,7 @@ CREATE TABLE Vehicle (
     Vehicle_VIN       CHAR(17)          NOT NULL,
     Color_ID          INT               NOT NULL,
     Vehicle_status    VARCHAR(11)       NOT NULL,
+    Vehicle_Location  INT               NOT NULL,
 
     CONSTRAINT Check_Vehicle_Status
         CHECK (Vehicle_Status IN ('Available','Unavailable')),
@@ -113,7 +114,7 @@ CREATE TABLE Vehicle (
         CHECK (Vehicle_Mileage >= 0),
 
     CONSTRAINT Check_Vehicle_Year
-        CHECK (Vehicle_Year BETWEEN 1980 AND YEAR(GETDATE()) + 1)
+        CHECK (Vehicle_Year BETWEEN 1980 AND YEAR(GETDATE()) + 1) 
 );
 
 CREATE TABLE Payment (
@@ -222,6 +223,11 @@ ALTER TABLE Vehicle
 ADD CONSTRAINT FK_Vehicle_Color
 FOREIGN KEY (Color_ID)
 REFERENCES Color(Color_ID);
+
+ALTER TABLE Vehicle
+ADD CONSTRAINT FK_Vehicle_Branch_Location
+FOREIGN KEY (Branch_ID)
+REFERENCES Branch(Branch_ID);
 
 ALTER TABLE Payment
 ADD CONSTRAINT FK_Payment_PaymentType
