@@ -226,7 +226,7 @@ REFERENCES Color(Color_ID);
 
 ALTER TABLE Vehicle
 ADD CONSTRAINT FK_Vehicle_Branch_Location
-FOREIGN KEY (Branch_ID)
+FOREIGN KEY (Vehicle_Location)
 REFERENCES Branch(Branch_ID);
 
 ALTER TABLE Payment
