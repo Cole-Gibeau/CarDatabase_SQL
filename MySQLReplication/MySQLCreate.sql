@@ -70,6 +70,7 @@ CREATE TABLE Vehicle (
     Vehicle_VIN CHAR(17) NOT NULL,
     Color_ID INT NOT NULL,
     Vehicle_Status VARCHAR(11) NOT NULL
+    Vehicle_Location INT NOT NULL
 ) ENGINE=InnoDB;
 
 CREATE TABLE Payment (
@@ -168,6 +169,12 @@ ALTER TABLE Vehicle
 ADD CONSTRAINT FK_Vehicle_Color
 FOREIGN KEY (Color_ID)
 REFERENCES Color(Color_ID)
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE Vehicle
+ADD CONSTRAINT FK_Vehicle_Location_Branch
+FOREIGN KEY (Vehicle_Location)
+REFERENCES Branch(Branch_ID)
 ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Payment
