@@ -24,13 +24,13 @@ VALUES (49.99), (59.99), (69.99), (79.99), (89.99);
 -- -----------------------
 -- 4. Vehicle
 -- -----------------------
-INSERT INTO Vehicle (Rental_Rate_ID, Vehicle_Model, Vehicle_Size, Vehicle_Mileage, Vehicle_Make, Vehicle_Year, Vehicle_VIN, Color_ID, Vehicle_Status)
+INSERT INTO Vehicle (Rental_Rate_ID, Vehicle_Model, Vehicle_Size, Vehicle_Mileage, Vehicle_Make, Vehicle_Year, Vehicle_VIN, Color_ID, Vehicle_Status, Vehicle_Location)
 VALUES
-(1, 'RAV4', 'SUV', 32000, 'Toyota', 2022, '1HGCM82633A123451', 1, 'Unavailable'),
-(2, 'Civic', 'Compact', 18000, 'Honda', 2023, '2FMDK3GC0BBB23456', 2, 'Available'),
-(3, 'Camry', 'Sedan', 25000, 'Toyota', 2021, '3C6UR5DL1DG345678', 3, 'Unavailable'),
-(4, 'CR-V', 'SUV', 40000, 'Honda', 2020, '5FNRL38697B456789', 4, 'Available'),
-(5, 'Altima', 'Sedan', 15000, 'Nissan', 2024, '1HGEM21901L567890', 5, 'Available');
+(1, 'RAV4', 'SUV', 32000, 'Toyota', 2022, '1HGCM82633A123451', 1, 'Unavailable',1),
+(2, 'Civic', 'Compact', 18000, 'Honda', 2023, '2FMDK3GC0BBB23456', 2, 'Available',1),
+(3, 'Camry', 'Sedan', 25000, 'Toyota', 2021, '3C6UR5DL1DG345678', 3, 'Unavailable',2),
+(4, 'CR-V', 'SUV', 40000, 'Honda', 2020, '5FNRL38697B456789', 4, 'Available',3),
+(5, 'Altima', 'Sedan', 15000, 'Nissan', 2024, '1HGEM21901L567890', 5, 'Available',1);
 
 -- -----------------------
 -- 5. Payment_Type
