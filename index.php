@@ -1,61 +1,115 @@
-<?php include 'db_config.php'; ?>
+<?php
+include 'db_config.php'; // make sure this connects to CarRentalDB
+
+// Get selected branch (if any)
+$branch_id = $_GET['branch_id'] ?? '';
+
+// Fetch all branches for dropdown
+$branches = $conn->query("SELECT Branch_ID, Branch_Name FROM Branch");
+
+// Build the main query
+$sql = "
+SELECT b.Branch_ID, b.Branch_Name, SUM(Payment_Amount) AS Total_Revenue
+FROM Booking BK
+JOIN Branch B
+on BK.PickUp_Branch_ID = B.Branch_ID
+JOIN Payment P
+on BK.Payment_ID = P.Payment_ID
+";
+
+if (!empty($branch_id)) {
+    $sql .= " WHERE b.Branch_ID = ?";
+}
+
+$sql .= " GROUP BY b.Branch_ID, b.Branch_Name"; // Group by needs to be here incase a single branch is selected 
+
+$stmt = $conn->prepare($sql);
+if (!$stmt) {
+    // show the exact SQL error from MySQL to help debug
+    die("Prepare failed: (" . $conn->errno . ") " . $conn->error . "\n\nSQL: " . $sql);
+}
+if (!empty($branch_id)) {
+    $stmt->bind_param("i", $branch_id);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
+?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Rental App Dashboard</title>
+  <title>Branch Revenue Report</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 40px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    form {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    select, button {
+      padding: 8px;
+      font-size: 14px;
+    }
+    table {
+      width: 60%;
+      margin: 0 auto;
+      border-collapse: collapse;
+      background-color: #fff;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+  </style>
 </head>
 <body>
-    <h1>Car Rental Database Viewer</h1>
 
-    <form method="GET" action="">
-        <label for="table">Select a table:</label>
-        <select name="table" id="table">
-            <option value="">-- Choose a table --</option>
-            <option value="Branch">Branch</option>
-            <option value="Color">Color</option>
-            <option value="Rental_Rate">Rental_Rate</option>
-            <option value="Payment_Type">Payment_Type</option>
-            <option value="Discount">Discount</option>
-        </select>
-        <button type="submit">View</button>
-    </form>
+<h1>Branch Revenue Report</h1>
 
-    <hr>
+<form method="GET" action="">
+  <label for="branch_id"><strong>Select Branch:</strong></label>
+  <select name="branch_id" id="branch_id">
+    <option value="">All Branches</option>
+    <?php while($b = $branches->fetch_assoc()): ?>
+      <option value="<?= $b['Branch_ID'] ?>" <?= ($b['Branch_ID'] == $branch_id) ? 'selected' : '' ?>>
+        <?= htmlspecialchars($b['Branch_Name']) ?>
+      </option>
+    <?php endwhile; ?>
+  </select>
+  <button type="submit">Show Results</button>
+</form>
 
-    <?php
-    if (isset($_GET['table']) && $_GET['table'] !== '') {
-        $table = $_GET['table'];
-        echo "<h2>Showing data from: $table</h2>";
+<table>
+  <tr>
+    <th>Branch ID</th>
+    <th>Branch Name</th>
+    <th>Total Revenue</th>
+  </tr>
+  <?php while($row = $result->fetch_assoc()): ?>
+    <tr>
+      <td><?= htmlspecialchars($row['Branch_ID']) ?></td>
+      <td><?= htmlspecialchars($row['Branch_Name']) ?></td>
+      <td>$<?= number_format($row['Total_Revenue'], 2) ?></td>
+    </tr>
+  <?php endwhile; ?>
+</table>
 
-        $sql = "SELECT * FROM `$table`";
-        $result = $conn->query($sql);
-
-        if ($result && $result->num_rows > 0) {
-            echo "<table border='1' cellpadding='5'><tr>";
-
-            // Print column names
-            while ($field = $result->fetch_field()) {
-                echo "<th>" . htmlspecialchars($field->name) . "</th>";
-            }
-            echo "</tr>";
-
-            // Print table rows
-            while ($row = $result->fetch_assoc()) {
-                echo "<tr>";
-                foreach ($row as $cell) {
-                    echo "<td>" . htmlspecialchars($cell) . "</td>";
-                }
-                echo "</tr>";
-            }
-
-            echo "</table>";
-        } else {
-            echo "No data found in table $table.";
-        }
-    }
-
-    $conn->close();
-    ?>
 </body>
 </html>
