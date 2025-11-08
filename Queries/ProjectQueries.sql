@@ -1,5 +1,220 @@
 --Last Update by Srijan, 11:46, 10/22
 
+To find total payment per branch
+USE CarRentalDB;
+WITH BranchPayments AS (
+    SELECT B.PickUp_Branch_ID AS BranchID, SUM(P.Payment_Amount) AS TotalPayments
+    FROM Booking B
+    JOIN Payment P ON B.Payment_ID = P.Payment_ID
+    GROUP BY B.PickUp_Branch_ID
+)
+SELECT Br.Branch_Name, BP.TotalPayments
+FROM BranchPayments BP
+JOIN Branch Br ON BP.BranchID = Br.Branch_ID
+ORDER BY BP.TotalPayments DESC;
+GO
+
+
+Subqueries
+/*
+Which vehicles are currently 'Available' AND
+have not been booked in the last 30 days?
+Business purpose: These vehicles are sitting idle, maybe relocate
+them to a busier branch.
+*/
+SELECT V.Vehicle_ID, V.Vehicle_Make, V.Vehicle_Model, V.Vehicle_Status
+FROM Vehicle V
+WHERE V.Vehicle_Status = 'Available'
+  AND V.Vehicle_ID NOT IN (
+        SELECT Vehicle_ID
+        FROM Booking
+        WHERE PickUpDate >= DATEADD(DAY, -30, CAST(GETDATE() AS date))
+    );
+ 
+SELECT 
+    V.Vehicle_ID,
+    V.Vehicle_Make,
+    V.Vehicle_Model,
+    V.Vehicle_Status,
+    Idle30Days =
+        CASE 
+            WHEN B.Vehicle_ID IS NULL THEN 'Yes - Idle 30+ Days'
+            ELSE 'No - Recently Rented'
+        END
+FROM Vehicle V
+LEFT JOIN (
+    SELECT DISTINCT Vehicle_ID
+    FROM Booking
+    WHERE PickUpDate >= DATEADD(DAY, -30, CAST(GETDATE() AS date))
+) AS B
+    ON V.Vehicle_ID = B.Vehicle_ID
+WHERE V.Vehicle_Status = 'Available';
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Stored Procedure
+-- Helpful if lets say customer service needs to check historical data for a customer to get like receipts they had once booked a vehicle.
+-- Like call customer service and make sure/verify a charge on their account based on the customers request.
+IF OBJECT_ID('dbo.usp_GetCustomerHistory_ByName') IS NOT NULL
+BEGIN
+    DROP PROCEDURE dbo.usp_GetCustomerHistory;
+END;
+GO
+ 
+CREATE PROCEDURE dbo.usp_GetCustomerHistory_ByName
+    @FirstName NVARCHAR(50),
+    @LastName  NVARCHAR(50)
+AS
+BEGIN
+    SELECT
+        c.Customer_First_Name,
+        c.Customer_Last_Name,
+        b.Booking_ID,
+        b.PickUpDate,
+        b.DropOffDate,
+        v.Vehicle_Make,
+        v.Vehicle_Model,
+        p.Payment_Amount
+    FROM Customers c
+    INNER JOIN Booking b ON b.Customer_ID = c.Customer_ID
+    INNER JOIN Vehicle v ON b.Vehicle_ID = v.Vehicle_ID
+    INNER JOIN Payment p ON b.Payment_ID = p.Payment_ID
+    WHERE c.Customer_First_Name = @FirstName
+      AND c.Customer_Last_Name  = @LastName
+    ORDER BY b.PickUpDate DESC;
+END;
+GO
+ 
+EXEC dbo.usp_GetCustomerHistory_ByName
+    @FirstName = 'John',
+    @LastName = 'Smith'
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+-- CTE
+--Can be helpful in finding out the performance of each branch.
+-- Helps in decision making on where to invest more, what branch needs improvement/changes.
+-- Helpful in tracking revenue
+USE CarRentalDB;
+WITH BranchPayments AS (
+    SELECT B.PickUp_Branch_ID AS BranchID, SUM(P.Payment_Amount) AS TotalPayments
+    FROM Booking B
+    JOIN Payment P ON B.Payment_ID = P.Payment_ID
+    GROUP BY B.PickUp_Branch_ID
+)
+SELECT Br.Branch_Name, BP.TotalPayments
+FROM BranchPayments BP
+JOIN Branch Br ON BP.BranchID = Br.Branch_ID
+ORDER BY BP.TotalPayments DESC;
+GO
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+UDFs
+/*
+Get all bookings for a given branch in a given date range (table-valued)
+Business purpose: reusable: will show like a manager the branch activity in a given date range
+*/
+IF OBJECT_ID('dbo.ufn_GetBranchBookings', 'IF') IS NOT NULL
+BEGIN
+DROP FUNCTION dbo.ufn_GetBranchBookings;
+END;
+GO
+ 
+CREATE FUNCTION dbo.ufn_GetBranchBookings
+(
+    @BranchID INT,
+    @StartDate DATE,
+    @EndDate DATE
+)
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT B.Booking_ID,
+           B.Customer_ID,
+           B.PickUpDate,
+           B.DropOffDate,
+           B.Vehicle_ID,
+           B.PickUp_Branch_ID,
+           B.DropOff_Branch_ID
+    FROM Booking B
+    WHERE (B.PickUp_Branch_ID = @BranchID OR B.DropOff_Branch_ID = @BranchID)
+      AND B.PickUpDate  >= @StartDate
+      AND B.DropOffDate <= @EndDate
+);
+GO
+ 
+SELECT *
+FROM dbo.ufn_GetBranchBookings(3, '2025-01-01', '2025-01-31');
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+Cursor
+/*
+Normalize phone numbers
+Business purpose: Data cleanup. Example: strip dashes/spaces and store standardized format in 
+Phone table. (You'd write REPLACE() etc. inside the loop.)
+*/
+DECLARE @PhoneID INT;
+DECLARE @Cell VARCHAR(20);
+ 
+DECLARE curPhone CURSOR FOR
+    SELECT Phone_ID, Cell_Phone
+    FROM Phone;
+ 
+OPEN curPhone;
+FETCH NEXT FROM curPhone INTO @PhoneID, @Cell;
+ 
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    UPDATE Phone
+    SET Cell_Phone = REPLACE(REPLACE(REPLACE(@Cell,'-',''),'(',''),')','')
+    WHERE Phone_ID = @PhoneID;
+ 
+    FETCH NEXT FROM curPhone INTO @PhoneID, @Cell;
+END
+ 
+CLOSE curPhone;
+DEALLOCATE curPhone;
+
+ 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------Pivot
+-- It gives a good breakdown of the vehicle inventory
+ 
+USE CarRentalDB;
+SELECT * FROM (
+    SELECT Vehicle_Year, Vehicle_Make FROM Vehicle
+) AS Source
+PIVOT (
+    COUNT(Vehicle_Make) FOR Vehicle_Make IN ([Toyota], [Honda], [Nissan])
+) AS PivotTable;
+GO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 -- Business Questions and SQL Queries
 
 -- 1. Total number of customers per branch
