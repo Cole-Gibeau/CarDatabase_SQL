@@ -1,4 +1,4 @@
---Last Update by Srijan, 11:46, 10/22
+--Last Update by Kendrick, 10:29, 11/9
 
 To find total payment per branch
 USE CarRentalDB;
@@ -183,7 +183,30 @@ PIVOT (
 ) AS PivotTable;
 GO
 
+-- AFTER TRIGGER
+IF OBJECT_ID('dbo.tr_PreventDamageReportDelete', 'TR') IS NOT NULL
+    DROP TRIGGER dbo.tr_PreventDamageReportDelete;
+GO
 
+
+CREATE TRIGGER dbo.tr_PreventDamageReportDelete
+ON Damage_Report
+AFTER DELETE
+AS
+BEGIN
+    -- Raise a custom error message
+    RAISERROR ('Error: Deleting records from the Damage Report table is not allowed. 
+    Please contact an administrator if removal is required.', 16, 1);
+
+    -- Undo the delete
+    ROLLBACK TRANSACTION;
+END;
+GO
+
+
+
+DELETE FROM Damage_Report
+WHERE Damage_Report_ID = 1;
 
 
 
