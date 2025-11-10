@@ -1,3 +1,6 @@
+--Last Updated by Srijan, 3:15, Nov10. Just a missed comma
+
+
 DROP DATABASE IF EXISTS CarRentalDB;
 CREATE DATABASE CarRentalDB;
 USE CarRentalDB;
@@ -69,7 +72,7 @@ CREATE TABLE Vehicle (
     Vehicle_Year INT NOT NULL,
     Vehicle_VIN CHAR(17) NOT NULL,
     Color_ID INT NOT NULL,
-    Vehicle_Status VARCHAR(11) NOT NULL
+    Vehicle_Status VARCHAR(11) NOT NULL,
     Vehicle_Location INT NOT NULL
 ) ENGINE=InnoDB;
 
