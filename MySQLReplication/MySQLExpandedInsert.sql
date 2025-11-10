@@ -1,4 +1,4 @@
-/*Update by Cole on Oct 27, 7 am*/
+/*Update by Srijan on Nov 10, 5pm*/
 
 USE CarRentalDB;
 
