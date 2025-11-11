@@ -1,5 +1,4 @@
---Last Updated by Srijan, 3:15, Nov10. Just a missed comma
-
+--Last Updated by Srijan, 9:45, Nov11. Clustered index at the bottom.
 
 DROP DATABASE IF EXISTS CarRentalDB;
 CREATE DATABASE CarRentalDB;
@@ -275,6 +274,93 @@ ADD CONSTRAINT FK_Inspection_Type
 FOREIGN KEY (Inspection_Type_ID)
 REFERENCES Inspection_Type(Inspection_Type_ID)
 ON DELETE CASCADE ON UPDATE CASCADE;
+
+USE CarRentalDB;
+
+-- Branch lookups by name or city
+CREATE INDEX idx_branch_name_city
+ON Branch (Branch_Name, Branch_City);
+
+-- Vehicle lookups and joins
+CREATE UNIQUE INDEX idx_vehicle_vin
+ON Vehicle (Vehicle_VIN);
+
+CREATE INDEX idx_vehicle_make_model
+ON Vehicle (Vehicle_Make, Vehicle_Model);
+
+CREATE INDEX idx_vehicle_status
+ON Vehicle (Vehicle_Status);
+
+CREATE INDEX idx_vehicle_color
+ON Vehicle (Color_ID);
+
+-- Customer search optimization
+CREATE INDEX idx_customer_name
+ON Customers (Customer_First_Name, Customer_Last_Name);
+
+CREATE INDEX idx_customer_email
+ON Customers (Customer_Email);
+
+CREATE INDEX idx_customer_city_zip
+ON Customers (Customer_City, Customer_Zip);
+
+CREATE INDEX idx_customer_membership
+ON Customers (Membership_ID);
+
+-- Membership performance optimization
+CREATE INDEX idx_membership_type
+ON Membership (Membership_Type_ID);
+
+CREATE INDEX idx_membership_status
+ON Membership (Member_Status);
+
+-- Payment optimization
+CREATE INDEX idx_payment_type_discount
+ON Payment (Payment_Type_ID, Discount_ID);
+
+CREATE INDEX idx_payment_date
+ON Payment (Payment_Date);
+
+-- Booking performance
+CREATE INDEX idx_booking_dates
+ON Booking (PickUpDate, DropOffDate);
+
+CREATE INDEX idx_booking_customer
+ON Booking (Customer_ID);
+
+CREATE INDEX idx_booking_vehicle
+ON Booking (Vehicle_ID);
+
+CREATE INDEX idx_booking_payment
+ON Booking (Payment_ID);
+
+CREATE INDEX idx_booking_branches
+ON Booking (PickUp_Branch_ID, DropOff_Branch_ID);
+
+-- Insurance lookups
+CREATE INDEX idx_insurance_type
+ON Insurance (Insurance_Type_ID);
+
+CREATE INDEX idx_insurance_name
+ON Insurance (Insurance_Name);
+
+-- Inspection performance
+CREATE INDEX idx_inspection_booking_type
+ON Inspection (Booking_ID, Inspection_Type_ID);
+
+-- Address and Phone optimization
+CREATE INDEX idx_address_customer
+ON Address (Customer_ID);
+
+CREATE INDEX idx_address_branch
+ON Address (Branch_ID);
+
+CREATE INDEX idx_phone_customer
+ON Phone (Customer_ID);
+
+CREATE INDEX idx_phone_branch
+ON Phone (Branch_ID);
+
 
 -- ------------------------------------------------------------
 -- END OF SCHEMA
