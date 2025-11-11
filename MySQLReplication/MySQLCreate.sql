@@ -1,4 +1,4 @@
---Last Updated by Srijan, 9:45, Nov11. Clustered index at the bottom.
+--Last Updated by Srijan, 9:45, Nov11. Added Non-Clustered index at the bottom.
 
 DROP DATABASE IF EXISTS CarRentalDB;
 CREATE DATABASE CarRentalDB;
