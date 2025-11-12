@@ -1,19 +1,4 @@
---Last Update by Kendrick, 10:29, 11/9
-
-To find total payment per branch
-USE CarRentalDB;
-WITH BranchPayments AS (
-    SELECT B.PickUp_Branch_ID AS BranchID, SUM(P.Payment_Amount) AS TotalPayments
-    FROM Booking B
-    JOIN Payment P ON B.Payment_ID = P.Payment_ID
-    GROUP BY B.PickUp_Branch_ID
-)
-SELECT Br.Branch_Name, BP.TotalPayments
-FROM BranchPayments BP
-JOIN Branch Br ON BP.BranchID = Br.Branch_ID
-ORDER BY BP.TotalPayments DESC;
-GO
-
+--Last Update by Srijan, 1:59, 11/12
 
 Subqueries
 /*
