@@ -1,6 +1,8 @@
---Last Update by Srijan, 1:59, 11/12
+--Last Update by Kendrick, 10:16, 11/12
+USE CarRentalDB;
+GO
 
-Subqueries
+-- Subqueries
 /*
 Which vehicles are currently 'Available' AND
 have not been booked in the last 30 days?
@@ -35,9 +37,11 @@ LEFT JOIN (
     ON V.Vehicle_ID = B.Vehicle_ID
 WHERE V.Vehicle_Status = 'Available';
 -----------------------------------------------------------------------------------------------------------------------------------------------------
-Stored Procedure
--- Helpful if lets say customer service needs to check historical data for a customer to get like receipts they had once booked a vehicle.
--- Like call customer service and make sure/verify a charge on their account based on the customers request.
+-- Stored Procedure
+/*
+Helpful if lets say customer service needs to check historical data for a customer to get like receipts they had once booked a vehicle.
+Like call customer service and make sure/verify a charge on their account based on the customers request.
+*/
 IF OBJECT_ID('dbo.usp_GetCustomerHistory_ByName') IS NOT NULL
 BEGIN
     DROP PROCEDURE dbo.usp_GetCustomerHistory;
@@ -73,10 +77,11 @@ EXEC dbo.usp_GetCustomerHistory_ByName
     @LastName = 'Smith'
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 -- CTE
---Can be helpful in finding out the performance of each branch.
--- Helps in decision making on where to invest more, what branch needs improvement/changes.
--- Helpful in tracking revenue
-USE CarRentalDB;
+/*
+Can be helpful in finding out the performance of each branch.
+Business Purpose: Helps in decision making on where to invest more, what branch needs improvement/changes.
+Helpful in tracking revenue
+*/
 WITH BranchPayments AS (
     SELECT B.PickUp_Branch_ID AS BranchID, SUM(P.Payment_Amount) AS TotalPayments
     FROM Booking B
@@ -89,10 +94,10 @@ JOIN Branch Br ON BP.BranchID = Br.Branch_ID
 ORDER BY BP.TotalPayments DESC;
 GO
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
-UDFs
+-- UDFs
 /*
 Get all bookings for a given branch in a given date range (table-valued)
-Business purpose: reusable: will show like a manager the branch activity in a given date range
+Business purpose: reusable: will show like a manager the branch activity in a given date range.
 */
 IF OBJECT_ID('dbo.ufn_GetBranchBookings', 'IF') IS NOT NULL
 BEGIN
@@ -127,11 +132,12 @@ GO
 SELECT *
 FROM dbo.ufn_GetBranchBookings(3, '2025-01-01', '2025-01-31');
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
-Cursor
+-- Cursor
 /*
-Normalize phone numbers
-Business purpose: Data cleanup. Example: strip dashes/spaces and store standardized format in 
-Phone table. (You'd write REPLACE() etc. inside the loop.)
+The business purpose of this cursor that we have created is primarily for data cleanup 
+for any phone numbers in the system to ensure that all phone numbers are stored in a consistent and 
+standardized format. Given that clean, uniform data improves reliability preventing errors and accurate
+integration with other business systems such as if it were to go through an HR system.
 */
 DECLARE @PhoneID INT;
 DECLARE @Cell VARCHAR(20);
@@ -157,8 +163,12 @@ DEALLOCATE curPhone;
 
  
 -----------------------------------------------------------------------------------------------------------------------------------------------------------Pivot
--- It gives a good breakdown of the vehicle inventory
- 
+-- Pivot
+/*
+This query gives a good breakdown of the vehicle inventory between the branches
+in which the business purpose helps with determining which vehicles a branch might need more of
+based on how much it currently has.
+*/
 USE CarRentalDB;
 SELECT * FROM (
     SELECT Vehicle_Year, Vehicle_Make FROM Vehicle
@@ -170,9 +180,10 @@ GO
 
 -- AFTER TRIGGER
 IF OBJECT_ID('dbo.tr_PreventDamageReportDelete', 'TR') IS NOT NULL
-    DROP TRIGGER dbo.tr_PreventDamageReportDelete;
+BEGIN
+DROP TRIGGER dbo.tr_PreventDamageReportDelete;
+END;
 GO
-
 
 CREATE TRIGGER dbo.tr_PreventDamageReportDelete
 ON Damage_Report
