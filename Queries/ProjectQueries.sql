@@ -1,4 +1,4 @@
---Last Update by Kendrick, 10:16, 11/12
+--Last Update by Kendrick, 9:32pm, 11/13
 USE CarRentalDB;
 GO
 
@@ -134,33 +134,49 @@ FROM dbo.ufn_GetBranchBookings(1, '2025-01-01', '2025-07-31');
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Cursor
 /*
-The business purpose of this cursor that we have created is primarily for data cleanup 
-for any phone numbers in the system to ensure that all phone numbers are stored in a consistent and 
-standardized format. Given that clean, uniform data improves reliability preventing errors and accurate
-integration with other business systems such as if it were to go through an HR system.
+The business purpose of this cursor is to help managers quickly see how often each vehicle is 
+being rented and identify cars that receive little or no rental activity. This information is useful 
+for deciding whether certain vehicles should be moved to another branch where demand is higher, 
+improving overall fleet usage and efficiency for the rental service.
 */
-DECLARE @PhoneID INT;
-DECLARE @Cell VARCHAR(20);
- 
-DECLARE curPhone CURSOR FOR
-    SELECT Phone_ID, Cell_Phone
-    FROM Phone;
- 
-OPEN curPhone;
-FETCH NEXT FROM curPhone INTO @PhoneID, @Cell;
- 
+DECLARE @BranchName   VARCHAR(200);
+DECLARE @VehicleName  VARCHAR(200);
+DECLARE @TimesRented  INT;
+
+DECLARE curBranchVehicle CURSOR SCROLL FOR
+    SELECT 
+        Br.Branch_Name,
+        (V.Vehicle_Make + ' ' + V.Vehicle_Model) AS VehicleName,
+        COUNT(*) AS TimesRented
+    FROM Booking AS BK
+    INNER JOIN Vehicle AS V
+        ON BK.Vehicle_ID = V.Vehicle_ID
+    INNER JOIN Branch AS Br
+        ON BK.PickUp_Branch_ID = Br.Branch_ID   -- or DropOff_Branch_ID if you prefer
+    GROUP BY 
+        Br.Branch_Name,
+        V.Vehicle_Make,
+        V.Vehicle_Model;
+
+OPEN curBranchVehicle;
+
+-- Start at the first row (SCROLL lets you do FIRST, LAST, PRIOR, etc.)
+FETCH FIRST FROM curBranchVehicle 
+INTO @BranchName, @VehicleName, @TimesRented;
+
 WHILE @@FETCH_STATUS = 0
 BEGIN
-    UPDATE Phone
-    SET Cell_Phone = REPLACE(REPLACE(REPLACE(@Cell,'-',''),'(',''),')','')
-    WHERE Phone_ID = @PhoneID;
- 
-    FETCH NEXT FROM curPhone INTO @PhoneID, @Cell;
-END
- 
-CLOSE curPhone;
-DEALLOCATE curPhone;
+    PRINT 
+    'Branch: ' + @BranchName + ' | Vehicle: ' + @VehicleName + ' | Times Rented: ' + CAST(@TimesRented AS VARCHAR(10));
 
+    -- Move forward one row at a time
+    FETCH NEXT FROM curBranchVehicle 
+    INTO @BranchName, @VehicleName, @TimesRented;
+END
+
+CLOSE curBranchVehicle;
+DEALLOCATE curBranchVehicle;
+GO
  
 -----------------------------------------------------------------------------------------------------------------------------------------------------------Pivot
 -- Pivot
