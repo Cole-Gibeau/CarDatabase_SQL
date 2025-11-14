@@ -369,7 +369,7 @@ VALUES
 -- -----------------------
 -- 18. Damage_Report
 -- -----------------------
-INSERT INTO Damage_Report (Damage_Report_Description)
+INSERT INTO Damage_Report (Damage_Report_Description,Inspection_ID)
 VALUES
 ('Scratch on left door',2),
 ('Cracked windshield',3),
