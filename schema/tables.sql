@@ -172,7 +172,7 @@ CREATE TABLE Phone (
 );
 
 CREATE TABLE Booking (
-    Booking_ID          INT IDENTITY(1,1) PRIMARY KEY,
+    Booking_ID          INT IDENTITY(1,1) PRIMARY KEY NONCLUSTERED,
     Date_Booked         DATE              NOT NULL,
     PickUpDate          DATE              NOT NULL,
     DropOffDate         DATE              NOT NULL,
@@ -309,4 +309,9 @@ ADD CONSTRAINT FK_Inspection_Type
 FOREIGN KEY (Inspection_Type_ID)
 REFERENCES Inspection_Type(Inspection_Type_ID);
 
+-----------------------------------------
+--ADDS CLUSTERED INDEX TO BOOKING TABLE
+-----------------------------------------
+CREATE CLUSTERED INDEX IX_Booking_Cluster_Index
+ON Booking(Booking_ID,Date_Booked);
 
