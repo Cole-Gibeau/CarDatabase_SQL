@@ -202,8 +202,9 @@ CREATE TABLE Inspection (
 
 CREATE TABLE Damage_Report (
     Damage_Report_ID            INT IDENTITY(1,1) PRIMARY KEY,
-    Damage_Report_Description   VARCHAR(250)      NOT NULL
-);
+    Damage_Report_Description   VARCHAR(250)      NOT NULL,
+    Inspection_ID               INT               Not NULL
+); 
 
 ------------------------------------------------------------
 -- STEP 2: ADD FOREIGN KEYS USING ALTER TABLE
@@ -308,6 +309,11 @@ ALTER TABLE Inspection
 ADD CONSTRAINT FK_Inspection_Type
 FOREIGN KEY (Inspection_Type_ID)
 REFERENCES Inspection_Type(Inspection_Type_ID);
+
+ALTER TABLE Damage_Report
+ADD CONSTRAINT FK_Inspection_ID
+FOREIGN KEY (Inspection_ID)
+REFERENCES Inspection(Inspection_ID);
 
 -----------------------------------------
 --ADDS CLUSTERED INDEX TO BOOKING TABLE
