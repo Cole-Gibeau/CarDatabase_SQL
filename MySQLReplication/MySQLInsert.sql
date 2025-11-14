@@ -233,8 +233,8 @@ FROM Customers;
 -- -----------------------
 INSERT INTO Phone (Home_Phone, Cell_Phone, Business_Phone, Customer_ID, Branch_ID)
 SELECT 
-'507-200-' + RIGHT('0000' + CAST(Customer_ID AS VARCHAR(4)),4),
-'507-300-' + RIGHT('0000' + CAST(Customer_ID AS VARCHAR(4)),4),
+CONCAT('507-200-', LPAD(Customer_ID, 4, '0')),
+CONCAT('507-300-', LPAD(Customer_ID, 4, '0')),
 NULL,
 Customer_ID,
 (Customer_ID % 10) + 1
