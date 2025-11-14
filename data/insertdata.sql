@@ -71,13 +71,58 @@ VALUES
 ---------------------
 -- 7. Payment
 ---------------------
-INSERT INTO Payment (Payment_Type_ID, Discount_ID, Payment_Amount, Payment_Date)
-SELECT 
-CASE WHEN Customer_ID % 2 = 0 THEN 1 ELSE 2 END,
-CASE WHEN Customer_ID % 3 = 0 THEN 2 ELSE 1 END,
-49.99 + (Customer_ID % 5) * 10,
-GETDATE()
-FROM Customers;
+INSERT INTO Payment (Payment_Type_ID, Discount_ID, Payment_Amount, Payment_Date) 
+VALUES
+(2, 1, 59.99, GETDATE()),
+(1, 2, 69.99, GETDATE()),
+(2, 3, 79.99, GETDATE()),
+(1, 1, 89.99, GETDATE()),
+(2, 2, 49.99, GETDATE()),
+(1, 3, 59.99, GETDATE()),
+(2, 1, 69.99, GETDATE()),
+(1, 2, 79.99, GETDATE()),
+(2, 3, 89.99, GETDATE()),
+(1, 1, 49.99, GETDATE()),
+(2, 2, 59.99, GETDATE()),
+(1, 3, 69.99, GETDATE()),
+(2, 1, 79.99, GETDATE()),
+(1, 2, 89.99, GETDATE()),
+(2, 3, 49.99, GETDATE()),
+(1, 1, 59.99, GETDATE()),
+(2, 2, 69.99, GETDATE()),
+(1, 3, 79.99, GETDATE()),
+(2, 1, 89.99, GETDATE()),
+(1, 2, 49.99, GETDATE()),
+(2, 3, 59.99, GETDATE()),
+(1, 1, 69.99, GETDATE()),
+(2, 2, 79.99, GETDATE()),
+(1, 3, 89.99, GETDATE()),
+(2, 1, 49.99, GETDATE()),
+(1, 2, 59.99, GETDATE()),
+(2, 3, 69.99, GETDATE()),
+(1, 1, 79.99, GETDATE()),
+(2, 2, 89.99, GETDATE()),
+(1, 3, 49.99, GETDATE()),
+(2, 1, 59.99, GETDATE()),
+(1, 2, 69.99, GETDATE()),
+(2, 3, 79.99, GETDATE()),
+(1, 1, 89.99, GETDATE()),
+(2, 2, 49.99, GETDATE()),
+(1, 3, 59.99, GETDATE()),
+(2, 1, 69.99, GETDATE()),
+(1, 2, 79.99, GETDATE()),
+(2, 3, 89.99, GETDATE()),
+(1, 1, 49.99, GETDATE()),
+(2, 2, 59.99, GETDATE()),
+(1, 3, 69.99, GETDATE()),
+(2, 1, 79.99, GETDATE()),
+(1, 2, 89.99, GETDATE()),
+(2, 3, 49.99, GETDATE()),
+(1, 1, 59.99, GETDATE()),
+(2, 2, 69.99, GETDATE()),
+(1, 3, 79.99, GETDATE()),
+(2, 1, 89.99, GETDATE()),
+(1, 2, 49.99, GETDATE());
 
 ---------------------
 -- 8. Insurance_Type
