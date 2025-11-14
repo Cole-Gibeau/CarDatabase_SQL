@@ -379,14 +379,12 @@ GO
 ---------------------
 INSERT INTO Damage_Report (Damage_Report_Description)
 VALUES
-('Scratch on left door'),
-('Cracked windshield'),
-('Flat tire'),
-('Broken headlight'),
-('Rear bumper dent'),
-('Small dent on roof'),
-('Worn tire tread'),
-('Minor rust on frame'),
-('Interior scuff marks'),
-('Loose side mirror');
+('Scratch on left door',2),
+('Cracked windshield',3),
+('Flat tire',4),
+('Broken headlight',5),
+('Rear bumper dent',7),
+('Small dent on roof',8),
+('Worn tire tread',9),
+('Minor rust on frame',10);
 GO
