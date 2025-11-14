@@ -310,16 +310,16 @@ VALUES
 -- -----------------------
 INSERT INTO Inspection (Booking_ID, Inspection_Type_ID, Inspection_Results)
 VALUES
-(1, 1, 'No damage found'),
-(1, 2, 'Slight scratches'),
-(2, 1, 'Clean'),
+(42, 1, 'No damage found'),
+(27, 2, 'Slight scratches'),
+(22, 1, 'Clean'),
 (3, 2, 'Minor dent on bumper'),
 (4,1,'Clean exterior'),
-(5,2,'No issues'),
+(15,2,'No issues'),
 (6,1,'Clean interior'),
 (7,2,'Minor scratch near trunk'),
 (8,1,'Perfect condition'),
-(9,2,'Tire wear minimal');
+(29,2,'Tire wear minimal');
 
 
 -- -----------------------
