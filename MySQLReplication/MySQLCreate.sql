@@ -147,7 +147,8 @@ CREATE TABLE Inspection (
 
 CREATE TABLE Damage_Report (
     Damage_Report_ID INT AUTO_INCREMENT PRIMARY KEY,
-    Damage_Report_Description VARCHAR(250) NOT NULL
+    Damage_Report_Description VARCHAR(250) NOT NULL,
+    Inspection_ID INT NOT NULL
 ) ENGINE=InnoDB;
 
 CREATE TABLE webapppermissions (
@@ -280,5 +281,11 @@ ALTER TABLE Inspection
 ADD CONSTRAINT FK_Inspection_Type
 FOREIGN KEY (Inspection_Type_ID)
 REFERENCES Inspection_Type(Inspection_Type_ID)
+ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE Damage_Report
+ADD CONSTRAINT FK_Inspection_ID
+FOREIGN KEY (Inspection_ID)
+REFERENCES Inspection(Inspection_ID)
 ON DELETE CASCADE ON UPDATE CASCADE;
 
