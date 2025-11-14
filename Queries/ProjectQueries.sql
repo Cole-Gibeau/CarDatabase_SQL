@@ -1,4 +1,4 @@
---Last Update by Kendrick, 9:32pm, 11/13
+--Last Update by Kendrick, 10:43pm, 11/13
 USE CarRentalDB;
 GO
 
@@ -143,33 +143,32 @@ DECLARE @BranchName   VARCHAR(200);
 DECLARE @VehicleName  VARCHAR(200);
 DECLARE @TimesRented  INT;
 
-DECLARE curBranchVehicle CURSOR SCROLL FOR
+DECLARE curBranchVehicle CURSOR FAST_FORWARD FOR
     SELECT 
-        Br.Branch_Name,
-        (V.Vehicle_Make + ' ' + V.Vehicle_Model) AS VehicleName,
-        COUNT(*) AS TimesRented
-    FROM Booking AS BK
-    INNER JOIN Vehicle AS V
-        ON BK.Vehicle_ID = V.Vehicle_ID
-    INNER JOIN Branch AS Br
-        ON BK.PickUp_Branch_ID = Br.Branch_ID   -- or DropOff_Branch_ID if you prefer
+        COALESCE(Br.Branch_Name, '(No Branch)') AS Branch_Name,
+        COALESCE(V.Vehicle_Make + ' ' + V.Vehicle_Model, '(Unknown Vehicle)') AS VehicleName,
+        SUM(CASE WHEN BK.Booking_ID IS NULL THEN 0 ELSE 1 END) AS TimesRented
+    FROM Vehicle AS V
+    LEFT JOIN Branch AS Br
+        ON V.Vehicle_Location = Br.Branch_ID
+    LEFT JOIN Booking AS BK
+        ON BK.Vehicle_ID = V.Vehicle_ID          -- still allows 0 rentals
     GROUP BY 
-        Br.Branch_Name,
-        V.Vehicle_Make,
-        V.Vehicle_Model;
+        COALESCE(Br.Branch_Name, '(No Branch)'),
+        COALESCE(V.Vehicle_Make + ' ' + V.Vehicle_Model, '(Unknown Vehicle)')
+    ORDER BY
+        COALESCE(Br.Branch_Name, '(No Branch)'),
+        COALESCE(V.Vehicle_Make + ' ' + V.Vehicle_Model, '(Unknown Vehicle)');
 
 OPEN curBranchVehicle;
 
--- Start at the first row (SCROLL lets you do FIRST, LAST, PRIOR, etc.)
-FETCH FIRST FROM curBranchVehicle 
+FETCH NEXT FROM curBranchVehicle 
 INTO @BranchName, @VehicleName, @TimesRented;
 
 WHILE @@FETCH_STATUS = 0
 BEGIN
-    PRINT 
-    'Branch: ' + @BranchName + ' | Vehicle: ' + @VehicleName + ' | Times Rented: ' + CAST(@TimesRented AS VARCHAR(10));
+    PRINT 'Branch: ' + @BranchName + ' | Vehicle: ' + @VehicleName + ' | Times Rented: ' + CAST(@TimesRented AS VARCHAR(10));
 
-    -- Move forward one row at a time
     FETCH NEXT FROM curBranchVehicle 
     INTO @BranchName, @VehicleName, @TimesRented;
 END
