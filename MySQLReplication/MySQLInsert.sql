@@ -341,7 +341,7 @@ VALUES
 -- ------------------------
 -- 19. webapppermissions
 -- ------------------------
-INSER INTO webapppermissions (User_ID, Username, Password_Hash, Role)
+INSERT INTO webapppermissions (User_ID, Username, Password_Hash, Role)
 VALUES
 (1, 'CarRentalEmployee', '$2y$10$KdIouEeCQ4t7XzP86XUxqun23UHL9pcSMYROJI4rDdgldFBMlIcx6','GeneralEmployee');
 
