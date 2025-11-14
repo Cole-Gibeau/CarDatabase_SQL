@@ -151,6 +151,14 @@ CREATE TABLE Damage_Report (
     Damage_Report_Description VARCHAR(250) NOT NULL
 ) ENGINE=InnoDB;
 
+CREATE TABLE webapppermissions (
+    User_ID       INT          PRIMARY KEY,
+    Username      VARCHAR(50)  NOT NULL,
+    Password_Hash VARCHAR(225) NOT NULL,
+    Role          VARCHAR(30)  NOT NULL
+)ENGINE=InnoDB;
+
+
 -- ------------------------------------------------------------
 -- STEP 3: ADD FOREIGN KEYS
 -- ------------------------------------------------------------
