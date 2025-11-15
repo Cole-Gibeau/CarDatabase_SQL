@@ -2,7 +2,7 @@
 USE CarRentalDB;
 GO
 
--- Subqueries
+-- Subquery
 /*
 Which vehicles are currently 'Available' AND
 have not been booked in the last 30 days?
