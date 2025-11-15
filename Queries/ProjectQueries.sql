@@ -1,4 +1,4 @@
---Last Update by Kendrick, 10:43pm, 11/13
+--Last Update by Kendrick Huynh, 3:0am, 11/15
 USE CarRentalDB;
 GO
 
@@ -9,15 +9,6 @@ have not been booked in the last 30 days?
 Business purpose: These vehicles are sitting idle, maybe relocate
 them to a busier branch.
 */
-SELECT V.Vehicle_ID, V.Vehicle_Make, V.Vehicle_Model, V.Vehicle_Status
-FROM Vehicle V
-WHERE V.Vehicle_Status = 'Available'
-  AND V.Vehicle_ID NOT IN (
-        SELECT Vehicle_ID
-        FROM Booking
-        WHERE PickUpDate >= DATEADD(DAY, -30, CAST(GETDATE() AS date))
-    );
- 
 SELECT 
     V.Vehicle_ID,
     V.Vehicle_Make,
@@ -44,7 +35,7 @@ Like call customer service and make sure/verify a charge on their account based 
 */
 IF OBJECT_ID('dbo.usp_GetCustomerHistory_ByName') IS NOT NULL
 BEGIN
-    DROP PROCEDURE dbo.usp_GetCustomerHistory;
+    DROP PROCEDURE dbo.usp_GetCustomerHistory_ByName;
 END;
 GO
  
@@ -184,12 +175,19 @@ This query gives a good breakdown of the vehicle inventory between the branches
 in which the business purpose helps with determining which vehicles a branch might need more of
 based on how much it currently has.
 */
-USE CarRentalDB;
-SELECT * FROM (
-    SELECT Vehicle_Year, Vehicle_Make FROM Vehicle
+SELECT *
+FROM (
+    SELECT
+        V.Vehicle_Year,
+        B.Branch_Name,
+        V.Vehicle_Make
+    FROM Vehicle AS V
+    INNER JOIN Branch AS B
+        ON V.Vehicle_Location = B.Branch_ID
 ) AS Source
 PIVOT (
-    COUNT(Vehicle_Make) FOR Vehicle_Make IN ([Toyota], [Honda], [Nissan])
+    COUNT(Vehicle_Make)
+    FOR Vehicle_Make IN ([Toyota], [Honda], [Nissan])
 ) AS PivotTable;
 GO
 
