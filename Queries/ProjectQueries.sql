@@ -1,4 +1,4 @@
---Last Update by Kendrick Huynh, 3:05am, 11/15
+--Last Update by Kendrick Huynh, 3:25am, 11/15
 USE CarRentalDB;
 GO
 
