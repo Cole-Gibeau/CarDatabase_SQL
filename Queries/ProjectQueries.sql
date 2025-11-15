@@ -219,36 +219,6 @@ GO
 DELETE FROM Damage_Report
 WHERE Damage_Report_ID = 1;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 -- Business Questions and SQL Queries
 
 -- 1. Total number of customers per branch
