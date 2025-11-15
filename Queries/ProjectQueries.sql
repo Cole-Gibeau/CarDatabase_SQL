@@ -1,4 +1,4 @@
---Last Update by Kendrick Huynh, 3:0am, 11/15
+--Last Update by Kendrick Huynh, 3:05am, 11/15
 USE CarRentalDB;
 GO
 
@@ -27,6 +27,7 @@ LEFT JOIN (
 ) AS B
     ON V.Vehicle_ID = B.Vehicle_ID
 WHERE V.Vehicle_Status = 'Available';
+GO
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 -- Stored Procedure
 /*
@@ -66,6 +67,7 @@ GO
 EXEC dbo.usp_GetCustomerHistory_ByName
     @FirstName = 'John',
     @LastName = 'Smith'
+GO
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 -- CTE
 /*
