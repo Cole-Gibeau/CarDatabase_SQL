@@ -9,8 +9,14 @@ The objective of this group project was to create a database for a car rental co
    --Taking these these ideas from our ERD into real tables in SQL Server Management Studio 21 using DDL code
    --Creating dummy data for all tables using DML
 
-Once we tested we had a working relational database by performing basic joins without error we then created different tools using TSQL like..
-  -- Trigger 
+Once we tested we had a working relational database by performing basic joins without error we then created the following different tools using TSQL..
+  --Trigger
+  --Stored Procedure
+  --Cursor
+  --Subquery
+  --CTE
+  --UDF
+  --Pivot
 
 
 We then created copies of our intial DDL and DML files to alter them to migrate the database into MYSQL since MYSQL follows different conventions then SSMS's TSQL
